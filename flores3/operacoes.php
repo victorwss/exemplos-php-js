@@ -35,6 +35,9 @@ function listar_todas_flores() {
     $consulta = $pdo->query($sql);
     while ($linha = $consulta->fetch()) {
         $resultados[] = $linha;
+        for ($i = 0; isset($linha["$i"]); $i++) {
+            unset($linha["$i"]);
+        }
     }
     return $resultados;
 }

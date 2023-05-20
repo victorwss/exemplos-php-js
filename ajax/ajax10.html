@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AJAX - Asynchronous Javascript and XML</title>
+        <script async>
+            let dadosLidos = null;
+            let idxLinha = -1;
+ 
+            function popular(dados) {
+                dadosLidos = dados;
+                let tabela = ""
+                    + "<table>"
+                    + '    <tr>'
+                    + '        <th scope="column">Chave</th>'
+                    + '        <th scope="column">Cor</th>'
+                    + '        <th scope="column">Espécie</th>'
+                    + '        <th scope="column">Localização</th>'
+                    + '        <th scope="column">Folhas</th>'
+                    + '        <th scope="column">Tipo</th>'
+                    + '        <th scope="column"></th>'
+                    + '        <th scope="column"></th>'
+                    + '    </tr>';
+                let idx = 0;
+                for (const linha of dados.listagem) {
+                    tabela += `<tr>`
+                        + `    <td>${linha.chave}</td>`
+                        + `    <td>${linha.cor}</td>`
+                        + `    <td>${linha.especie}</td>`
+                        + `    <td>${linha.localizacao}</td>`
+                        + `    <td>${linha.folhas}</td>`
+                        + `    <td>${linha.tipo}</td>`
+                        + `    <td><button type="button" onclick="editar(${idx})">Editar</button></td>`
+                        + `</tr>`;
+                    idx++;
+                }
+                tabela += ``
+                    + `<tr>`
+                    + `    <td colspan="6"></td>`
+                    + `    <td><button type="button" onclick="novo()">Criar novo</button></td>`
+                    + `</tr>`;
+                document.getElementById("tipo").innerHTML = "<option>Escolha...</option>";
+                for (const tipo of dados.tipos) {
+                    const option = document.createElement("option");
+                    option.value = tipo;
+                    option.innerHTML = tipo;
+                    option.id = "opcao-" + tipo;
+                    document.getElementById("tipo").appendChild(option);
+                }
+                document.getElementById("listagem").innerHTML = tabela;
+                document.getElementById("formulario").style.display = "none";
+            }
+
+            function editar(idx) {
+                const linha = dadosLidos.listagem[idx];
+                for (const campo in linha) {
+                    document.getElementById(campo).value = linha[campo];
+                }
+                document.getElementById("opcao-" + linha.tipo).setAttribute("selected", "selected");
+                document.getElementById("formulario").style.display = "block";
+                document.getElementById("div-chave").style.display = "block";
+                document.getElementById("bt-excluir").style.display = "block";
+            }
+
+            function novo() {
+                for (const campo of document.querySelectorAll("form input")) {
+                    campo.value = "";
+                }
+                for (const campo of document.querySelectorAll("option")) {
+                    campo.removeAttribute("selected");
+                }
+                document.getElementById("formulario").style.display = "block";
+                document.getElementById("div-chave").style.display = "none";
+                document.getElementById("bt-excluir").style.display = "none";
+            }
+
+            function lerDados() {
+                fetch("http://localhost/flores3/listagem-json2.php")
+                    .then(resposta => resposta.text())
+                    .then(dados => popular(JSON.parse(dados)))
+                    .catch(erro => {
+                        console.log("Deu chabu", erro);
+                    });
+            }
+
+            function confirmar() {
+                if (!confirm("Tem certeza que deseja salvar os dados?")) return;
+                const alterar = document.getElementById("div-chave").style.display === "block";
+                let dados = "";
+                const campos = ["cor", "especie", "localizacao", "folhas", "tipo"];
+                if (alterar) campos.push("chave");
+                for (const campo of campos) {
+                    const valor = document.getElementById(campo).value;
+                    dados += `&${campo}=${valor}`;
+                }
+                dados = dados.substring(1);
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    lerDados();
+                };
+                xhr.open("POST", "http://localhost/flores3/cadastro-json2.php", true);
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.send(JSON.stringify(dados));
+            }
+
+            function excluir() {
+                if (!confirm("Tem certeza que deseja excluir a flor?")) return;
+                document.getElementById("excluir-flor").submit();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="listagem"></div>
+        <button type="button" onclick="lerDados()">Ler o resultado</button>
+        <form id="formulario" style="display:none">
+            <div id="div-chave">
+                <label for="chave">Chave:</label>
+                <input type="text" id="chave" name="chave" value="" readonly>
+            </div>
+            <div>
+                <label for="cor">Cor:</label>
+                <input type="text" id="cor" name="cor" value="">
+            </div>
+            <div>
+                <label for="especie">Espécie:</label>
+                <input type="text" id="especie" name="especie" value="">
+            </div>
+            <div>
+                <label for="local">Local:</label>
+                <input type="text" id="localizacao" name="localizacao" value="">
+            </div>
+            <div>
+                <label for="folhas">Folhas:</label>
+                <input type="text" id="folhas" name="folhas" value="">
+            </div>
+            <div>
+                <label for="tipo">Tipo de flor:</label>
+                <select id="tipo" name="tipo">
+                    <option>Escolha...</option>
+                </select>
+            </div>
+            <div>
+                <button type="button" onclick="confirmar()">Salvar</button>
+                <button type="button" onclick="excluir()" id="bt-excluir">Excluir</button>
+            </div>
+        </form>
+    </body>
+</html>
