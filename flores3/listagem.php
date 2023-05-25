@@ -2,7 +2,12 @@
 try {
     include "abrir_transacao.php";
 include_once "operacoes.php";
-$resultado = listar_todas_flores(); ?>
+$resultado = listar_todas_flores();
+
+// ATENÇÃO: Isto não é um HTML completo!
+// É apenas um pedaço do HTML que deve ser lido por AJAX!
+
+?>
 <table>
     <tr>
         <th scope="column">Chave</th>

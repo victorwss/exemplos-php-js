@@ -34,10 +34,8 @@ function listar_todas_flores() {
     $resultados = [];
     $consulta = $pdo->query($sql);
     while ($linha = $consulta->fetch()) {
+        $linha2 = array();
         $resultados[] = $linha;
-        for ($i = 0; isset($linha["$i"]); $i++) {
-            unset($linha["$i"]);
-        }
     }
     return $resultados;
 }
@@ -60,4 +58,13 @@ function listar_todos_tipos() {
         $resultados[] = $linha["tipo"];
     }
     return $resultados;
+}
+
+function login($nome, $senha) {
+    global $pdo;
+    $sql = "SELECT chave, nome FROM usuario WHERE nome = :nome AND senha = :senha";
+    $resultados = [];
+    $consulta = $pdo->prepare($sql);
+    $consulta->execute(["nome" => $nome, "senha" => $senha]);
+    return $consulta->fetch();
 }
