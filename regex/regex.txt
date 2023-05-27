@@ -1,0 +1,28 @@
+Defina a regex com /conteúdo/<opções>
+
+As opções podem ser:
+- g (global, quase sempre você vai querer isso)
+- i (não diferenciar maiúsculas e minúsculas)
+- m (multilinha)
+
+Ou então, use RegExp(string, opções-que-também-é-string)
+
+Na regex:
+
+^ - Início da string
+$ - Final da string
+(?:opcao1|opcao2|opcao3|opcao4) - Escolhe entre várias opções separadas por |
+[c-x] - Escolhe algo entre os caracteres c a x (que podem ser quaisquer outros caracteres)
+<alguma-coisa>? - Essa alguma coisa pode ou não estar presente.
+<alguma-coisa>* - Essa alguma coisa pode ou não estar presente inúmeras vezes ou nenhuma.
+<alguma-coisa>+ - Essa alguma coisa deve estar presente uma ou várias vezes.
+\d - Qualquer número
+\w - Qualquer letra
+\s - Qualquer caractere de espaço
+
+Para testar:
+
+string.match(regex)
+
+Ou pode ser também:
+regex.test(string) - mas tome cuidado que nem sempre vai fazer o que você quer.
