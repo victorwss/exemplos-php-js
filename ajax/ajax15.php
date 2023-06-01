@@ -116,7 +116,17 @@ $usuario = $_SESSION["usuario"];
 
             function excluir() {
                 if (!confirm("Tem certeza que deseja excluir a flor?")) return;
-                document.getElementById("excluir-flor").submit();
+
+                const conteudo = JSON.stringify({chave: parseInt(document.getElementById("chave").value) });
+                fetch("http://localhost/flores3/excluir.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: conteudo
+                })
+                    .then(resultado => lerDados())
+                    .catch(zica => console.error(zica));
             }
         </script>
     </head>

@@ -63,7 +63,6 @@ function listar_todos_tipos() {
 function login($nome, $senha) {
     global $pdo;
     $sql = "SELECT chave, nome FROM usuario WHERE nome = :nome AND senha = :senha";
-    $resultados = [];
     $consulta = $pdo->prepare($sql);
     $consulta->execute(["nome" => $nome, "senha" => $senha]);
     return $consulta->fetch();

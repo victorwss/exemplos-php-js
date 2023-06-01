@@ -31,7 +31,7 @@ try {
     <body>
         <p>Página de login</p>
         <?php if ($senha_errada) { ?>
-            <p>Senha errada.</p>
+            <p>Login ou senha errados.</p>
         <?php } ?>
         <form action="<?= $_SERVER["REQUEST_URI"]?>" method="POST">
             <p>Login</p>
