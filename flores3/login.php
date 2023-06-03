@@ -18,7 +18,7 @@ try {
         $usuario = null;
     }
     if ($usuario) {
-        header("Location: http://localhost/ajax/ajax15.php");
+        header("Location: http://localhost/ajax/ajax16.php");
         exit();
     }
 ?>
